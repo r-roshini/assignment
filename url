@@ -1,0 +1,72 @@
+   package demo1;
+    import java.io.*;
+	import java.net.HttpURLConnection;
+	import java.net.URL;
+
+	public class demo1{
+		public static void main(String[] args) throws IOException
+		{
+			try 
+			{
+				String url ="http://www.twitter.com";
+				URL obj =new URL(url);
+				HttpURLConnection obj1=(HttpURLConnection)obj1.openConnection();
+				obj1.setReadTimeout(5000);
+				obj1.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
+				obj1.addRequestProperty("User-Agent","Mozilla");
+				obj1.addRequestProperty("Referer","google.com");
+				System.out.println("Request URL ... "+url);
+				
+				int redirect=0;
+				
+				int status=obj1.getResponseCode();
+				if(status==200)
+					System.out.println("200!OK");
+				else if(status !=200||status!=403||status!=404) 
+				{
+					if (status ==302|| status ==301)
+						redirect+=0;
+				}
+				
+				System.out.println("Response Code ... " +status);
+				if(redirect==1) {
+					String newUrl = obj1.getHeaderField("Location");
+					String cookies = obj1.getHeaderField("Set-Cookie");
+					obj1=(HttpURLConnection) new URL (newUrl).openConnection();
+					obj1.setRequestProperty("Cookie",cookies);
+					obj1.addRequestProperty("Accept-Language","rn-US,en;q=0.8");
+					obj1.addRequestProperty("User-Agent","Mozilla");
+					obj1.addRequestProperty("Referer","google.com");
+					System.out.println("Request URL ... "+newUrl);
+					
+				}
+				BufferedReader s =new BufferedReader(new InputStreamReader(obj1.getInputStream()));
+					String inputLine;
+					StringBuffer ht=new StringBuffer();
+					while ((inputLine = s.readLine()) !=null)
+					{
+						ht.append(inputLine);
+					}
+					
+					
+					s.close();
+					
+					System.out.println("URL Connect... \n" + ht.toString());
+					System.out.println("Done");
+				}
+				catch (Exception e)
+                    {
+					System.out.println(e);
+					
+					}
+			   catch(UnsatisfiedLinkError ex)
+			{
+				   System.out.println(ex);
+				   System.exit(1);
+			}
+
+				
+	
+}
+	}
+
